@@ -30,6 +30,7 @@ RSpec.describe User, type: :model do
     expect(@user).not_to be_valid
   end
   it { should validate_uniqueness_of(:email).ignoring_case_sensitivity }
+  it { should validate_uniqueness_of(:phone_number).ignoring_case_sensitivity}
   it { should validate_confirmation_of(:password) }
   it { should allow_value('nonemail@l').for(:email)}
   it { should_not allow_value('nonemail').for(:email)}
