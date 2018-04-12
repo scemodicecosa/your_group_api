@@ -9,6 +9,7 @@ describe ApiConstraints do
       request = double(host: 'api.marketplace.dev',
                        headers: {'Accept' => "application/yourgroup.com.v1"})
       expect(api_v1.matches?(request)).to be true
+
     end
 
     it 'returns deafult version when default option is specified' do
