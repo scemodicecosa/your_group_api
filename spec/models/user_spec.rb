@@ -27,8 +27,9 @@ RSpec.describe User, type: :model do
     @user.email = ''
     @user.phone_number = ''
     @user.save
-    expect(@user).not_to be_valid
+    expect(@user).to be_valid
   end
+
   it { should validate_uniqueness_of(:email).ignoring_case_sensitivity }
   it { should validate_uniqueness_of(:phone_number).ignoring_case_sensitivity}
   it { should validate_confirmation_of(:password) }
