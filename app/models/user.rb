@@ -11,6 +11,9 @@ class User < ApplicationRecord
   has_many :roles, dependent: :destroy
   has_many :groups, through: :roles
 
+  has_many :votes
+  has_many :polls, through: :votes
+
   has_many :actions
 
   def email_required?

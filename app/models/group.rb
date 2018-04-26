@@ -17,4 +17,14 @@ class Group < ApplicationRecord
     Role.create!(name: 'Admin', user: u, group: self, admin: true)
   end
 
+
+
+  def new_poll(u, question, answers)
+    return unless self.users.include? u
+
+    Poll.create!(user: u, group:self, question: question, answers: answers)
+  end
+
+
+
 end

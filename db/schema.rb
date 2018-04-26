@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_26_092749) do
+ActiveRecord::Schema.define(version: 2018_04_26_135525) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,17 @@ ActiveRecord::Schema.define(version: 2018_04_26_092749) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "polls", force: :cascade do |t|
+    t.string "question"
+    t.bigint "group_id"
+    t.text "answers"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["group_id"], name: "index_polls_on_group_id"
+    t.index ["user_id"], name: "index_polls_on_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -62,6 +73,20 @@ ActiveRecord::Schema.define(version: 2018_04_26_092749) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "votes", force: :cascade do |t|
+    t.integer "answer"
+    t.bigint "poll_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["poll_id"], name: "index_votes_on_poll_id"
+    t.index ["user_id"], name: "index_votes_on_user_id"
+  end
+
   add_foreign_key "actions", "groups"
   add_foreign_key "actions", "users"
+  add_foreign_key "polls", "groups"
+  add_foreign_key "polls", "users"
+  add_foreign_key "votes", "polls"
+  add_foreign_key "votes", "users"
 end

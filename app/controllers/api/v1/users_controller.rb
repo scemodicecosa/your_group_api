@@ -6,4 +6,5 @@ class Api::V1::UsersController < ApplicationController
     group = Group.new(name: 'nome',description: 'descrizione')
     group.users
   end
+
 end
