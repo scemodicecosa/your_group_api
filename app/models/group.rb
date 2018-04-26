@@ -4,6 +4,9 @@ class Group < ApplicationRecord
   has_many :roles
   has_many :users, through: :roles
 
+  has_many :actions
+
+
 
 
   def add_user(u)
@@ -11,7 +14,7 @@ class Group < ApplicationRecord
   end
 
   def add_admin(u)
-    Role.create(name: 'Admin', user: u, group: self, admin: true)
+    Role.create!(name: 'Admin', user: u, group: self, admin: true)
   end
 
 end
