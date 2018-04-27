@@ -9,12 +9,12 @@ class Group < ApplicationRecord
 
 
 
-  def add_user(u)
-    Role.create!(name: 'Participant', user: u, group: self)
+  def add_user(id)
+    Role.create!(name: 'Participant', user_id: id, group: self)
   end
 
-  def add_admin(u)
-    Role.create!(name: 'Admin', user: u, group: self, admin: true)
+  def add_admin(id)
+    Role.create!(name: 'Admin', user_id: id, group: self, admin: true)
   end
 
 
@@ -27,6 +27,12 @@ class Group < ApplicationRecord
 
   def new_action(name, description)
     Action.create!(name: name, description: description, group: self)
+  end
+
+  def self.new_group(user, params)
+    g = Group.new(params)
+    g.add_admin(user)
+    g
   end
 
 

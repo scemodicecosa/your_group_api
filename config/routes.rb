@@ -5,8 +5,13 @@ Rails.application.routes.draw do
   namespace :api, defaults: {format: :json}do
     scope module: :v1,
           constraints: ApiConstraints.new(version: 1, default: false) do
+      namespace :groups do
+        post :add_user, to: 'add_user'
+      end
       resources :users, only: [:show, :update]
       resources :sessions, only: [:create, :destroy]
+      resources :groups, only: [:show,:create]
+
     end
   end
 end

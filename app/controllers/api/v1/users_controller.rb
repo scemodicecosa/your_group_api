@@ -20,7 +20,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.permit(:email)
+    params.require(:users).permit(:email, :phone_number)
   end
 
   def current_user

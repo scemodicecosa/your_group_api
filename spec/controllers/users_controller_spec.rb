@@ -24,7 +24,7 @@ describe Api::V1::UsersController, type: :controller do
       before (:each) do
         @user = FactoryBot.create(:user)
         api_auth_token(@user.auth_token)
-        patch :update, params: {id: @user.id, email: 'leonardosagratella@yahoo.it'}, format: :json
+        patch :update, params: {id: @user.id,users: {email: 'leonardosagratella@yahoo.it'}}, format: :json
       end
 
       it 'should be allowed to update his profile' do

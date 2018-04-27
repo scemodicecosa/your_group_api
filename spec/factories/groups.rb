@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :group do
-    name "MyString"
-    description "MyString"
+    name FFaker::Lorem.word
+    description FFaker::Lorem.word
   end
 end
