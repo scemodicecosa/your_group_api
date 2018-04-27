@@ -40,5 +40,7 @@ module YourGroupApi
     config.generators.system_tests = nil
 
     config.eager_load_paths << "#{Rails.root}/lib"
+    config.eager_load_paths << "#{Rails.root}/controllers/concerns"
+    #config.autoload_paths += %W(#{config.root}/lib)
   end
 end
