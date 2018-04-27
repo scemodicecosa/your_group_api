@@ -5,10 +5,10 @@ RSpec.describe Poll, type: :model do
   context 'A user votes an answer' do
 
     before(:each) do
-      @user = FactoryBot.build(:user)
-      @user2 = FactoryBot.build(:user)
-      @group = FactoryBot.build(:group)
-      @group.add_user(@user)
+      @user = FactoryBot.create(:user)
+      @user2 = FactoryBot.create(:user)
+      @group = FactoryBot.create(:group)
+      @group.add_user(@user.id)
       @poll = @group.new_poll(@user, 'Come va?', '["bene","tuttobene"]')
 
     end

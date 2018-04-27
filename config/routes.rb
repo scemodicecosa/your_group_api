@@ -7,6 +7,7 @@ Rails.application.routes.draw do
           constraints: ApiConstraints.new(version: 1, default: false) do
       namespace :groups do
         post :add_user, to: 'add_user'
+        post :remove_user
       end
       resources :users, only: [:show, :update]
       resources :sessions, only: [:create, :destroy]

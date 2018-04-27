@@ -9,13 +9,20 @@ class Group < ApplicationRecord
 
 
 
-  def add_user(id)
-    Role.create!(name: 'Participant', user_id: id, group: self)
+  def add_user(user_id, admin = false)
+    r = Role.where(user_id: user_id, group: self).first_or_create!
+    r.update(admin: admin)
+    if admin
+      r.update(name: 'Admin')
+    else
+      r.update(name: 'Participant')
+    end
   end
 
-  def add_admin(id)
-    Role.create!(name: 'Admin', user_id: id, group: self, admin: true)
+  def remove_user(user_id)
+    Role.where(user_id: user_id, group: self).destroy_all
   end
+
 
 
 

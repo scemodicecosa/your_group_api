@@ -4,7 +4,7 @@ RSpec.describe User, type: :model do
 
 
   before do
-    @user  = FactoryBot.build(:user)
+    @user  = FactoryBot.create(:user)
   end
 
   subject { @user }
@@ -31,7 +31,7 @@ RSpec.describe User, type: :model do
   end
 
   it 'should coexist two user with no phone' do
-    user2 = FactoryBot.build(:user)
+    user2 = FactoryBot.create(:user)
     user2.phone_number = ''
     @user.phone_number = ''
     user2.save
@@ -42,8 +42,8 @@ RSpec.describe User, type: :model do
   end
 
   it 'when delete should delete all roles associated to the user' do
-    g = FactoryBot.build(:group)
-    g.add_user(@user)
+    g = FactoryBot.create(:group)
+    g.add_user(@user.id)
     id = @user.id
     @user.destroy!
     expect(Role.where(user_id: id, group_id: g.id)).to be_empty
