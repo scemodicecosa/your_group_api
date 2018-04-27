@@ -25,6 +25,10 @@ class Group < ApplicationRecord
     Poll.create!(user: u, group:self, question: question, answers: answers)
   end
 
+  def new_action(name, description)
+    Action.create!(name: name, description: description, group: self)
+  end
+
 
 
 end

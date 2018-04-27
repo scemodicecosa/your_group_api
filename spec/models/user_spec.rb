@@ -56,4 +56,15 @@ RSpec.describe User, type: :model do
   it { should_not allow_value('nonemail').for(:email)}
   it { should_not respond_to(:lol) }
   it { expect(@user).to be_valid}
+  it { should validate_uniqueness_of(:auth_token)}
+
+  it 'should have an auth token when created' do
+    expect(@user).not_to be_nil
+  end
+
+  it '2 user should not have same token' do
+    @user2 = FactoryBot.create(:user)
+    expect(@user.auth_token != @user2.auth_token).to be_equal true
+  end
+
 end

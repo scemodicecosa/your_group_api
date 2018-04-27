@@ -17,7 +17,6 @@ class Poll < ApplicationRecord
 
     Vote.where(user_id: u.id, poll_id: self.id)
         .first_or_create!.update!(answer: vote)
-
   end
 
 

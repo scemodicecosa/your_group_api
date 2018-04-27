@@ -4,4 +4,9 @@ class Action < ApplicationRecord
 
   validates :group_id, presence: true
   validates :name, presence: true
+
+  def assign_to(user)
+    self.user = user
+    self.save!
+  end
 end
