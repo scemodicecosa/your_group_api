@@ -1,0 +1,45 @@
+<h1><%= @doc.title%></h1>
+<table>
+  <tbody>
+  <tr>
+    <th valign="top"> Title </th>
+    <td> <%= @doc.title %> </td>
+  </tr>
+  <tr> <th valign="top"> URL </th>
+    <td><%= @doc.url %> </td>
+  </tr>
+  <tr> <th valign="top"> Method </th>
+        <td><%= @doc.method %></td>
+  <tr> <th valign="top"> URL Params </th>
+    <td> <b>Required:</b><br/>
+        <code><%= @doc.url_req %></code><br/>
+        <b>Optional:</b><br/>
+      <%= @doc.url_opt %><br/>
+
+    </td>
+  </tr> <tr> <th valign="top"> Data Params </th>
+    <td> <%= @doc.params %> </td>
+  </tr> <tr> <th valign="top"> Success Response </th>
+    <td>
+      <b>Code:</b><br/>
+      <%= @doc.success_response.split(' ** ')[0] %><br/>
+      <b>Content:</b><br/>
+      <%= @doc.success_response.split(' ** ')[1] %>
+    </td>
+  </tr> <tr> <th valign="top"> Error Response </th>
+    <td>
+      <b>Code:</b><br/>
+      <%= @doc.error_response.split(' ** ')[0] %><br/>
+      <b>Content:</b><br/>
+      <%= @doc.error_response.split(' ** ')[1] %>
+    </td>
+  </tr>
+  <tr> <th valign="top"> Sample Call </th>
+    <td> </td>
+  </tr>
+  <tr> <th valign="top"> Notes </th>
+    <td> </td>
+  </tr>
+  </tbody>
+</table>
+

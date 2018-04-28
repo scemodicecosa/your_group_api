@@ -1,0 +1,68 @@
+<h1>Api::V1::Documentation#create</h1>
+<p>Find me in app/views/api/v1/documentation/create.html.erb</p>
+
+<%= form_with scope: :documentation, url: '/documentation' do |form| %>
+
+  <% if @doc.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@doc.errors.count, "error") %> prohibited
+        this article from being saved:
+      </h2>
+      <ul>
+        <% @doc.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>
+    <%= form.label :title %><br>
+    <%= form.text_area :title %>
+  </p>
+ <p>
+    <%= form.label :url %><br>
+    <%= form.text_area :url %>
+  </p>
+ <p>
+    <%= form.label :method %><br>
+    <%= form.text_area :method %>
+  </p>
+ <p>
+    <%= form.label :url_req %><br>
+    <%= form.text_area :url_req %>
+  </p>
+ <p>
+    <%= form.label :url_opt %><br>
+    <%= form.text_area :url_opt %>
+  </p>
+ <p>
+    <%= form.label :params %><br>
+    <%= form.text_area :params %>
+  </p>
+ <p>
+    <%= form.label :success_response %><br>
+    <%= form.text_area :success_response %>
+  </p>
+<p>
+    <%= form.label :error_response %><br>
+    <%= form.text_area :error_response %>
+  </p>
+<p>
+    <%= form.label :example %><br>
+    <%= form.text_area :example %>
+  </p>
+
+  <p>
+    <%= form.label :note %><br>
+    <%= form.text_area :note %>
+  </p>
+
+  <p>
+    <%= form.submit %>
+  </p>
+
+<% end %>
+
+<%= link_to 'Back', '/documentation' %>
