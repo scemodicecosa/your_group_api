@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_26_142623) do
+ActiveRecord::Schema.define(version: 2018_04_28_141109) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,21 @@ ActiveRecord::Schema.define(version: 2018_04_26_142623) do
     t.datetime "updated_at", null: false
     t.index ["group_id"], name: "index_actions_on_group_id"
     t.index ["user_id"], name: "index_actions_on_user_id"
+  end
+
+  create_table "documentations", force: :cascade do |t|
+    t.text "title"
+    t.text "url"
+    t.text "method"
+    t.text "url_req"
+    t.text "url_opt"
+    t.text "params"
+    t.text "success_response"
+    t.text "error_response"
+    t.text "example"
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "groups", force: :cascade do |t|

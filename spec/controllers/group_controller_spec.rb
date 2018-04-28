@@ -47,8 +47,6 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
       it { should respond_with 401 }
     end
   end
-
-
   describe 'when a logged user' do
     context 'creates a right group' do
       before(:each) do
@@ -93,8 +91,6 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
     it { should respond_with :unauthorized}
 
   end
-
-
   describe 'POST @#add_user' do
     before(:each) do
       @group = FactoryBot.create(:group)

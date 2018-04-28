@@ -56,10 +56,11 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
+gem 'factory_bot_rails'
+gem 'ffaker'
+
 group :test do
     gem 'rspec-rails'
-    gem 'factory_bot_rails'
-    gem 'ffaker'
     gem 'shoulda-matchers'
 
 end

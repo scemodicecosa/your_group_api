@@ -6,7 +6,7 @@ describe ApiConstraints do
 
   describe 'matches?' do
     it 'returns true when the version matches Accept header version' do
-      request = double(host: 'api.marketplace.dev',
+      request = double(host: 'v1.marketplace.dev',
                        headers: {'Accept' => "application/yourgroup.com.v1"})
       expect(api_v1.matches?(request)).to be true
 

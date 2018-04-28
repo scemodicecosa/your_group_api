@@ -1,0 +1,10 @@
+<h1>ALL DOCUMENTATION</h1>
+
+<%= button_to 'Add Doc', new_documentation_path , method: :get%>
+<% @docs.each do |doc| %>
+
+  <p>
+    <%= link_to doc.title, doc %>
+  </p>
+
+<% end %>

@@ -1,8 +1,15 @@
 Rails.application.routes.draw do
+  namespace :v1 do
+    namespace :v1 do
+      get 'documentation/show'
+      get 'documentation/create'
+    end
+  end
   devise_for :users
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  resources :documentation, only: [:show, :create, :index, :new]
 
-  namespace :api, defaults: {format: :json}do
+  namespace :v1, defaults: {format: :json}do
     scope module: :v1,
           constraints: ApiConstraints.new(version: 1, default: false) do
       namespace :groups do
@@ -12,7 +19,6 @@ Rails.application.routes.draw do
       resources :users, only: [:show, :update]
       resources :sessions, only: [:create, :destroy]
       resources :groups, only: [:show,:create]
-
     end
   end
 end

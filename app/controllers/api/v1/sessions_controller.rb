@@ -7,7 +7,7 @@ class Api::V1::SessionsController < ApplicationController
         sign_in user, store: false
         user.generate_auth_token
         user.save!
-        render json: user, status: 200
+        render json: {auth_token: user.auth_token}, status: 200
       else
         render json: {errors: 'Invalid email or password'}, status: 422
       end
@@ -17,7 +17,7 @@ class Api::V1::SessionsController < ApplicationController
         sign_in user, store: false
         user.generate_auth_token
         user.save!
-        render json: user, status: 200
+        render json: {auth_token: user.auth_token}, status: 200
       else
         render json: {errors: 'Invalid email or password'}, status: 422
       end

@@ -5,7 +5,7 @@ class Api::V1::GroupsController < ApplicationController
 
 
   '''
-    GET /api/v1/groups/:id
+    GET /v1/v1/groups/:id
     returns info about the group
     return 401 "Not a member" if user not in group
   '''
@@ -20,7 +20,7 @@ class Api::V1::GroupsController < ApplicationController
   end
 
   '''
-    POST /api/v1/groups/
+    POST /v1/v1/groups/
     Create a group and add the current_user as admin
     params { group: {name (pefforza) , description}
     returns 201 when successfully created new group
@@ -39,7 +39,7 @@ class Api::V1::GroupsController < ApplicationController
 
 
   '''
-    POST /api/v1/groups/add_user
+    POST /v1/v1/groups/add_user
     Add the user_id to group_id, if admin set the user to admin
     params { user_id, group_id, admin=false}
     returns 201 when added the user
@@ -60,7 +60,7 @@ class Api::V1::GroupsController < ApplicationController
   end
 
   '''
-    POST /api/v1/groups/remove_user
+    POST /v1/v1/groups/remove_user
     Remove user_id from group_id, if current_user is admin or user_id equals current_user
     params { user_id, group_id}
     returns 201 when added the user
