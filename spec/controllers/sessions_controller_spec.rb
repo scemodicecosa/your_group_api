@@ -63,7 +63,8 @@ RSpec.describe Api::V1::SessionsController, type: :controller do
         #@user.generate_auth_token
         @old_auth = @user.auth_token
         sign_in @user
-        delete :destroy, params: {id: @user.auth_token}#, format: :json}
+        api_auth_token(@user.auth_token)
+        delete :destroy,params:{}, format: :json
       end
 
       it 'should change user authentication token' do
@@ -74,17 +75,7 @@ RSpec.describe Api::V1::SessionsController, type: :controller do
       it {should respond_with 204}
     end
 
-    context 'incorrect logout' do
-      before(:each) do
-        delete :destroy, params: {id: 'francesco'} #,format: :json}
-      end
 
-      it 'should give me back an error' do
-        expect(json_response[:errors]).to eql "User not present"
-      end
-
-      it {should respond_with 500}
-    end
   end
 
 end

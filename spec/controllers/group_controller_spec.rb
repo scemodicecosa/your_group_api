@@ -101,16 +101,16 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
       before (:each) do
         api_auth_token(@user.auth_token)
         @user2 = FactoryBot.create(:user)
-        post :add_user, params: {user_id: @user2.id, group_id: @group.id, admin: false}, format: :json
+        post :add_user, params: {id: @user2.id, group_id: @group.id, admin: false}, format: :json
       end
 
       context 'should be admin if admin is called again with true' do
         before(:each) do
-          post :add_user, params: {user_id: @user2.id, group_id: @group.id, admin: true}, format: :json
+          post :add_user, params: {id: @user2.id, group_id: @group.id, admin: true}, format: :json
         end
         it { expect(Role.where(user_id: @user2.id, group_id: @group.id).first.admin).to eql true}
         it 'should be again false' do
-          post :add_user, params: {user_id: @user2.id, group_id: @group.id, admin: false}, format: :json
+          post :add_user, params: {id: @user2.id, group_id: @group.id, admin: false}, format: :json
           expect(Role.where(user_id: @user2.id, group_id: @group.id).first.admin).to eql false
         end
       end
@@ -131,7 +131,7 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
       before(:each) do
         api_auth_token(@user.auth_token)
         @user2 = FactoryBot.create(:user)
-        post :add_user, params: {user_id: @user2.id, group_id: @group.id, admin: true}, format: :json
+        post :add_user, params: {id: @user2.id, group_id: @group.id, admin: true}, format: :json
       end
 
       it 'the new user must be added to the group as admin' do
@@ -148,7 +148,7 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
         @nonad = FactoryBot.create(:user)
         @nonad2 = FactoryBot.create(:user)
         api_auth_token(@nonad.auth_token)
-        post :add_user, params: {user_id: @nonad.id, group_id: @group.id}, format: :json
+        post :add_user, params: {id: @nonad.id, group_id: @group.id}, format: :json
       end
 
       it 'should give you an error message'do
@@ -165,7 +165,7 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
       before(:each) do
 
         @user2 = FactoryBot.create(:user)
-        post :add_user, params: {user_id: @user2.id, group_id: @group.id, admin: true}, format: :json
+        post :add_user, params: {id: @user2.id, group_id: @group.id, admin: true}, format: :json
       end
       it 'should have an error message' do
         expect(json_response).to have_key :errors
@@ -185,7 +185,7 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
     context 'an admin removes an user' do
       before(:each) do
         api_auth_token(@user.auth_token)
-        post :remove_user, params: {user_id: @u2.id, group_id: @group.id}, format: :json
+        delete :remove_user, params: {id: @u2.id, group_id: @group.id}, format: :json
       end
 
       it 'should remove the user' do
@@ -197,7 +197,7 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
     context 'an user removes himself' do
       before(:each) do
         api_auth_token(@u2.auth_token)
-        post :remove_user, params: {user_id: @u2.id, group_id: @group.id}, format: :json
+        post :remove_user, params: {id: @u2.id, group_id: @group.id}, format: :json
       end
 
       it 'should remove the user' do
@@ -210,7 +210,7 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
       before(:each) do
         @u3 = FactoryBot.create(:user)
         api_auth_token(@u3.auth_token)
-        post :remove_user, params: {user_id: @u2.id, group_id: @group.id}, format: :json
+        post :remove_user, params: {id: @u2.id, group_id: @group.id}, format: :json
       end
 
       it 'should get an error' do

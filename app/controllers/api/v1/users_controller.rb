@@ -12,23 +12,15 @@ class Api::V1::UsersController < ApplicationController
   def update
     u = current_user
     if u.update(user_params)
-      render json: u, status: 200
+      render json: u, status: 201
     else
-      render json: {errors: "Impossible to update user"}, status: 422
+      render json: {errors: u.errors}, status: 422
     end
 
   end
 
   def user_params
     params.require(:users).permit(:email, :phone_number)
-  end
-
-  def current_user
-    @current_user ||= User.find_by_auth_token(request.headers["Authorization"])
-  end
-
-  def authenticate_with_token!
-    render(json: {errors: "You are not authorized!"},status: :unauthorized) unless current_user.present?
   end
 
 end

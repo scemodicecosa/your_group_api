@@ -49,9 +49,9 @@ class Api::V1::GroupsController < ApplicationController
     role = Role.where(group_id: params[:group_id], user: current_user).first
     if role && role.admin
       if params[:admin].to_s == "true"
-        role.group.add_user(params[:user_id], true )
+        role.group.add_user(params[:id], true )
       else
-        role.group.add_user(params[:user_id])
+        role.group.add_user(params[:id])
       end
 
     else
@@ -68,8 +68,8 @@ class Api::V1::GroupsController < ApplicationController
   '''
   def remove_user
     role = Role.where(group_id: params[:group_id], user: current_user).first
-    if role && (role.admin || params[:user_id].to_i == current_user.id)
-      role.group.remove_user(params[:user_id])
+    if role && (role.admin || params[:id].to_i == current_user.id)
+      role.group.remove_user(params[:id])
     else
       render json: {errors: "You are not admin or in group"}, status: 401
     end

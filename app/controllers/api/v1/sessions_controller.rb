@@ -1,5 +1,6 @@
 class Api::V1::SessionsController < ApplicationController
 
+  before_action :authenticate_with_token!, only: [:destroy]
   def create
     if session_params[:email].present?
       user = User.find_by_email(session_params[:email])
@@ -19,21 +20,20 @@ class Api::V1::SessionsController < ApplicationController
         user.save!
         render json: {auth_token: user.auth_token}, status: 200
       else
-        render json: {errors: 'Invalid email or password'}, status: 422
+        render json: {errors: 'Invalid phone or password'}, status: 422
       end
     else
-      render json: {errors: 'No email or phone provided'}, status: 422
+      render json: {errors: 'No email or phone provided'}, status: 500
     end
   end
 
 
   def destroy
-    if params[:id].present? && (u = User.find_by_auth_token(params[:id]))
-      u.generate_auth_token
-      u.save!
+    current_user.generate_auth_token
+    if current_user.save
       head 204
     else
-      render json: {errors: "User not present"},status: 500
+      render json: {errors: "Can't logout"}, status: 422
     end
   end
 

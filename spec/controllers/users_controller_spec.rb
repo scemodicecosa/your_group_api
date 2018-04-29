@@ -30,7 +30,7 @@ describe Api::V1::UsersController, type: :controller do
       it 'should be allowed to update his profile' do
         expect(json_response[:email]).to eql "leonardosagratella@yahoo.it"
       end
-      it { should respond_with 200}
+      it { should respond_with 201}
     end
     context 'the user is not authenticated' do
       before (:each) do

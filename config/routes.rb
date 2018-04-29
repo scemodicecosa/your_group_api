@@ -9,16 +9,16 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :documentation, only: [:show, :create, :index, :new]
 
-  namespace :v1, defaults: {format: :json}do
+  namespace :api, defaults: {format: :json}do
     scope module: :v1,
           constraints: ApiConstraints.new(version: 1, default: false) do
-      namespace :groups do
-        post :add_user, to: 'add_user'
-        post :remove_user
-      end
+
+      post '/groups/:group_id/add_user/:id', to: 'groups#add_user'
+      delete '/groups/:group_id/remove_user/:id', to: 'groups#remove_user'
       resources :users, only: [:show, :update]
-      resources :sessions, only: [:create, :destroy]
+      resources :sessions, only: [:create]
       resources :groups, only: [:show,:create]
+      delete :sessions, to: "sessions#destroy"
     end
   end
 end

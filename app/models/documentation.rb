@@ -1,2 +1,0 @@
-class Documentation < ApplicationRecord
-end
