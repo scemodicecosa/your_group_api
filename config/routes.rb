@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
       post '/groups/:group_id/add_user/:id', to: 'groups#add_user'
       delete '/groups/:group_id/remove_user/:id', to: 'groups#remove_user'
-      resources :users, only: [:show, :update]
+      resources :users, only: [:show, :update, :create]
       resources :sessions, only: [:create]
       resources :groups, only: [:show,:create]
       delete :sessions, to: "sessions#destroy"

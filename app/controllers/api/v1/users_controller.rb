@@ -19,8 +19,21 @@ class Api::V1::UsersController < ApplicationController
 
   end
 
+  def create
+    @user = User.new(create_user_params)
+    if @user.save
+      head 201
+    else
+      render json: {errors: @user.errors}, status:  400
+    end
+  end
+
   def user_params
     params.require(:users).permit(:email, :phone_number)
+  end
+
+  def create_user_params
+    params.require(:users).permit(:email, :phone_number, :password, :password_confirmation)
   end
 
 end

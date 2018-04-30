@@ -38,6 +38,10 @@
 
   * **Code:** 401 <br />
     **Content:** `{ errors : "You are not authorized!" }`
+  
+  * **Code:** 400 <br />
+      **Content:** `{ errors : "Cannot create user" }`
+     
 
 
 * **Sample Call:**

@@ -3,6 +3,46 @@ require 'rails_helper'
 describe Api::V1::UsersController, type: :controller do
   before(:each) { request.headers['Accept'] = 'application/yourgroup.com.v1' }
 
+  describe 'POST #create' do
+
+    before(:each) do
+      @attributes = FactoryBot.attributes_for(:user)
+      #print @attributes
+    end
+
+    context 'A user create a correct user' do
+      before(:each) do
+        post :create, params: {users: @attributes }, format: :json
+      end
+
+      it 'should create a new user with current info' do
+        u = User.where(email: @attributes[:email]).first
+        expect(u.phone_number).to eql @attributes[:phone_number]
+        expect(u.valid_password? @attributes[:password]).to be true
+      end
+
+      it { should respond_with 201}
+    end
+
+    context 'A user create a wrong user' do
+      before(:each) do
+        post :create, params: {users: @attributes.without(:password)}, format: :json
+      end
+
+      it 'should not create a user' do
+        u = User.where(email: @attributes[:email]).first
+        expect(u).to be_nil
+      end
+
+      it { should respond_with 400}
+
+      it { expect(json_response).to have_key :errors}
+    end
+
+
+  end
+
+
   describe 'GET show' do
     before(:each) do
       @user = FactoryBot.create(:user)

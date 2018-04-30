@@ -1,6 +1,6 @@
 **Login as User**
 ----
-  Create a new session for the user. Returns a token to be used for other API
+  Create a new session for the user. A user can login with phone or email. Returns a token to be used for other API
 * **URL**
 
   /api/sessions

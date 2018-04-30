@@ -13,4 +13,7 @@
     * [ Add a user to a group ](group/group_add_user.md)
     * [ Remove a user from a group ](group/group_remove_user.md)
    
+ * **Session**
+    * [ Login ](session/login.md)
+    * [ Logout ](session/logout.md)
  
