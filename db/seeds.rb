@@ -5,3 +5,11 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+#
+u = FactoryBot.create(:user)
+u2 = FactoryBot.create(:user)
+u3 = FactoryBot.create(:user)
+
+g = FactoryBot.create(:group)
+g.add_user(u.id, true)
+g.add_user(u2.id)

@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Poll, type: :model do
 
+
   context 'A user votes an answer' do
 
     before(:each) do
@@ -9,7 +10,7 @@ RSpec.describe Poll, type: :model do
       @user2 = FactoryBot.create(:user)
       @group = FactoryBot.create(:group)
       @group.add_user(@user.id)
-      @poll = @group.new_poll(@user, 'Come va?', '["bene","tuttobene"]')
+      @poll = @group.new_poll(@user, 'Come va?', ["bene","tuttobene"])
 
     end
 

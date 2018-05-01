@@ -1,7 +1,7 @@
 class Poll < ApplicationRecord
   belongs_to :group
   belongs_to :user
-  serialize :answers
+  serialize :answers, Array
 
 
   has_many :votes
@@ -10,6 +10,17 @@ class Poll < ApplicationRecord
   validates :question, presence: true
   validates :answers, presence: true
   validates :group_id, presence: true
+
+
+
+
+  def get_votes
+    res = []
+    answers.each_with_index do |answer,i|
+      res << {answer: answer, total: self.votes.where(answer: i).count}
+    end
+    res
+  end
 
 
   def vote(u, vote)

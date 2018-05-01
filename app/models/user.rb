@@ -32,4 +32,12 @@ class User < ApplicationRecord
     end while User.exists?(auth_token: self.auth_token)
   end
 
+  def is_in?(group_id)
+    Role.where(group_id: group_id, user_id: self.id).present?
+  end
+
+  def is_admin_in?(group_id)
+    Role.where(group_id: group_id, user_id: self.id, admin: true).present?
+  end
+
 end

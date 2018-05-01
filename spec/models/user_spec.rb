@@ -2,10 +2,27 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
 
-
-  before do
+  before(:each) do
     @user  = FactoryBot.create(:user)
   end
+
+  describe 'check is in' do
+    before(:each) do
+      @admin = FactoryBot.create(:user)
+      @nonexi = FactoryBot.create(:user)
+      @group = FactoryBot.create(:group)
+      @group.add_user(@user.id)
+      @group.add_user(@admin.id, true)
+    end
+    it { expect(@admin.is_admin_in? @group).to eql true }
+
+    it { expect(@user.is_admin_in? @group).to eql false }
+
+    it { expect(@user.is_in? @group).to eql true }
+    it { expect(@nonexi.is_in? @group).to eql false }
+
+  end
+
 
   subject { @user }
 
