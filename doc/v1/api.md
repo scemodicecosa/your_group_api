@@ -16,7 +16,9 @@
  * **Session**
     * [ Login ](session/login.md)
     * [ Logout ](session/logout.md)
+    
  * **Poll**
     * [ Create Poll ](poll/poll_create.md)
     * [ Vote a Poll ](poll/poll_vote.md)
+    * [ Show Poll ](poll/poll_get.md)
  

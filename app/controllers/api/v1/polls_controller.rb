@@ -1,6 +1,6 @@
 class Api::V1::PollsController < ApplicationController
 
-  before_action :authenticate_with_token!, only: [ :create, :vote]
+  before_action :authenticate_with_token!, only: [ :create, :vote, :show]
 
   def create
     if current_user.is_admin_in? params[:group_id]
@@ -31,6 +31,15 @@ class Api::V1::PollsController < ApplicationController
       end
     else
       render json: {errors: "You are not in group"}, status: 401
+    end
+  end
+
+  def show
+    @poll = Poll.find(params[:id])
+    if current_user.is_in? @poll.group_id
+      render json: @poll.get_votes , status: 200
+    else
+      render json: {errors: "You are not in group!"} , status: 401
     end
   end
 

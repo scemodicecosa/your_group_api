@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
       post '/groups/:group_id/polls', to: 'polls#create'
       get 'polls/:poll_id/vote/:vote', to: 'polls#vote'
+      resources :polls, only: [:show]
       resources :users, only: [:show, :update, :create]
       resources :sessions, only: [:create]
       resources :groups, only: [:show,:create]

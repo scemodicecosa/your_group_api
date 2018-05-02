@@ -64,7 +64,7 @@ RSpec.describe Api::V1::PollsController, type: :controller do
 
     context 'when a user vote' do
       before(:each) do
-         #us = FactoryBot.create(:user)
+        #us = FactoryBot.create(:user)
         api_auth_token @user.auth_token
         @old_votes = @poll.votes.count
         get :vote, params:{poll_id: @poll.id, vote: 0}, format: :json
@@ -123,8 +123,8 @@ RSpec.describe Api::V1::PollsController, type: :controller do
     context 'when 10 people votes' do
       before do
         @poll.group.users.each_with_index do |user,i|
-         # api_auth_token(user.auth_token)
-         Vote.create(poll_id: @poll.id, user_id: user.id, answer: i % 3 % 2)
+          # api_auth_token(user.auth_token)
+          Vote.create(poll_id: @poll.id, user_id: user.id, answer: i % 3 % 2)
         end
       end
 
@@ -137,6 +137,50 @@ RSpec.describe Api::V1::PollsController, type: :controller do
       end
     end
 
+  end
+
+  describe 'GET /polls/:id' do
+    before do
+      @poll = FactoryBot.create(:poll, group: @group, user: @user)
+    end
+    context 'when a user in group asks for a poll' do
+      before do
+        @poll.group.users.each_with_index do |user,i|
+          Vote.create(poll_id: @poll.id, user_id: user.id, answer: i % 3 % 2)
+        end
+        api_auth_token(@user.auth_token)
+        get :show, params: {id: @poll.id}, format: :json
+      end
+
+      it 'answers with current voting for the poll' do
+        expect(json_response[0]).to have_key :answer
+        expect(json_response[0]).to have_key :total
+        expect(json_response[0][:total]).to eql 7
+      end
+
+      it { should respond_with 200 }
+
+
+
+    end
+
+    context 'when a user in group asks for a poll' do
+      before do
+        @poll.group.users.each_with_index do |user,i|
+          Vote.create(poll_id: @poll.id, user_id: user.id, answer: i % 3 % 2)
+        end
+        nonus = FactoryBot.create(:user)
+        api_auth_token(nonus.auth_token)
+        get :show, params: {id: @poll.id}, format: :json
+      end
+
+      it 'says he"s not in group' do
+        expect(json_response).to have_key :errors
+      end
+
+      it { should respond_with 401 }
+
+    end
   end
 end
 
