@@ -153,6 +153,8 @@ RSpec.describe Api::V1::PollsController, type: :controller do
       end
 
       it 'answers with current voting for the poll' do
+        expect(json_response).to be_a Array
+
         expect(json_response[0]).to have_key :answer
         expect(json_response[0]).to have_key :total
         expect(json_response[0][:total]).to eql 7
@@ -164,7 +166,7 @@ RSpec.describe Api::V1::PollsController, type: :controller do
 
     end
 
-    context 'when a user in group asks for a poll' do
+    context 'when a user not in group asks for a poll' do
       before do
         @poll.group.users.each_with_index do |user,i|
           Vote.create(poll_id: @poll.id, user_id: user.id, answer: i % 3 % 2)

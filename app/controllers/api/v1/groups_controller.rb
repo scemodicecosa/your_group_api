@@ -1,6 +1,6 @@
 class Api::V1::GroupsController < ApplicationController
 
-  before_action :authenticate_with_token!, only: [:show, :create, :add_user,:remove_user]
+  before_action :authenticate_with_token!, only: [:show, :create, :add_user,:remove_user,:participants]
   respond_to :json
 
 
@@ -48,6 +48,16 @@ class Api::V1::GroupsController < ApplicationController
       render json: {errors: "You are not admin or in group"}, status: 401
     end
   end
+
+  def participants
+    if current_user.is_in?(params[:id])
+      @group = Group.find(params[:id])
+      render json: @group.users, status: 200
+    else
+      render json: {errors: "you are not in group"}, status: 401
+    end
+  end
+
   private
   def group_params
     params.require(:group).permit(:name, :description)

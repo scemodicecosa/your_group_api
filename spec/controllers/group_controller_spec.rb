@@ -221,4 +221,42 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
     end
   end
 
+  describe 'GET /groups/:id/participants' do
+    before do
+      @group = FactoryBot.create(:group)
+      @group.add_user(@user.id,true)
+    end
+
+    context 'when there are participants in group' do
+      before do
+        15.times do
+          user = FactoryBot.create(:user)
+          @group.add_user(user.id)
+        end
+        api_auth_token(@user.auth_token)
+        get :participants, params: {id: @group.id},format: :json
+      end
+      it "returns an array of participants" do
+        expect(json_response).to be_a Array
+      end
+      it "the number of participants must match with the ones in group" do
+        expect(json_response.count).to eql @group.users.count
+      end
+      it {should respond_with 200}
+    end
+
+    context 'when a user not in group asks for participants' do
+      before do
+        user = FactoryBot.create(:user)
+        api_auth_token(user.auth_token)
+        get :participants, params: {id: @group.id},format: :json
+      end
+      it "should receive an error" do
+        expect(json_response).to have_key :errors
+        expect(json_response[:errors]).to include "not in group"
+      end
+      it {should respond_with 401}
+    end
+
+  end
 end

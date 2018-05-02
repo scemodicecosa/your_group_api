@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
       post '/groups/:group_id/add_user/:id', to: 'groups#add_user'
       delete '/groups/:group_id/remove_user/:id', to: 'groups#remove_user'
+      get '/groups/:id/participants', to: 'groups#participants'
 
       post '/groups/:group_id/polls', to: 'polls#create'
       get 'polls/:poll_id/vote/:vote', to: 'polls#vote'
