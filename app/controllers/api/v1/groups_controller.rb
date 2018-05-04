@@ -1,6 +1,6 @@
 class Api::V1::GroupsController < ApplicationController
 
-  before_action :authenticate_with_token!, only: [:show, :create, :add_user,:remove_user,:participants]
+  before_action :authenticate_with_token!, only: [:show, :create, :add_user,:remove_user,:participants, :update_role, :accept]
   respond_to :json
 
 
@@ -18,9 +18,24 @@ class Api::V1::GroupsController < ApplicationController
     group = Group.new(group_params)
     if group.save
       group.add_user(current_user.id,true)
+      r = Role.where(user_id: current_user.id, group_id: group.id).first
+      r.update!(accepted: true)
       render json: group, status: 201
     else
       render json: {errors: group.errors}, status: 400
+    end
+  end
+
+  def update
+    if current_user.is_admin_in? params[:id]
+      group = Group.find(params[:id])
+      if group.update(update_params)
+        head 201
+      else
+        render json: {errors: group.errors}, status: 400
+      end
+    else
+      render json: {errors: "you are not admin"}, status: 401
     end
   end
 
@@ -58,9 +73,42 @@ class Api::V1::GroupsController < ApplicationController
     end
   end
 
+  def update_role
+    if current_user.is_admin_in?(params[:id])
+      r = Role.where(group_id: params[:id], user_id: params[:user_id]).first
+      if r.update(role_params)
+        head 201
+      else
+        render json: {errors: r.errors}, status: 400
+      end
+    else
+      render json: {errors: "you are not admin"}, status: 401
+    end
+  end
+
+  def accept
+    r = Role.where(user_id: current_user.id, group_id: params[:id]).first
+    if r
+      if r.update(accepted: true)
+         head 201
+      else
+         render json: {errors: r.errors}, status: 400
+      end
+    else
+      render json: {errors: "you are not in group"}, status: 401
+    end
+  end
+
   private
   def group_params
     params.require(:group).permit(:name, :description)
   end
 
+  def update_params
+    params.permit(:name, :description)
+  end
+
+  def role_params
+    params.permit(:name,:admin)
+  end
 end

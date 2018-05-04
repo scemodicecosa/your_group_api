@@ -5,6 +5,7 @@ RSpec.describe Api::V1::PollsController, type: :controller do
     @user = FactoryBot.create(:user)
     @group = FactoryBot.create(:group)
     @group.add_user(@user.id, true)
+    accept_invite(@user.id, @group.id)
     populate
   end
   describe 'POST /groups/:id/polls' do
@@ -191,6 +192,7 @@ def populate
   9.times do
     u = FactoryBot.create :user
     @group.add_user u.id
+    accept_invite(u.id, @group.id)
   end
 end
 

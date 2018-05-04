@@ -13,6 +13,8 @@ RSpec.describe User, type: :model do
       @group = FactoryBot.create(:group)
       @group.add_user(@user.id)
       @group.add_user(@admin.id, true)
+      accept_invite(@user.id, @group.id)
+      accept_invite(@admin.id, @group.id)
     end
     it { expect(@admin.is_admin_in? @group).to eql true }
 
@@ -84,4 +86,9 @@ RSpec.describe User, type: :model do
     expect(@user.auth_token != @user2.auth_token).to be_equal true
   end
 
+
+  def accept_invite(user_id, group_id)
+    r = Role.where(user_id: user_id, group_id: group_id).first
+    r.update!(accepted: true)
+  end
 end

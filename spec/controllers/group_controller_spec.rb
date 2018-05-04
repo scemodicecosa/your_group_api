@@ -5,16 +5,16 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
     @user = FactoryBot.create(:user)
   end
 
-
-
   context 'Create group with 5 people' do
     before(:each) do
       @group = FactoryBot.create(:group)
       api_auth_token(@user.auth_token)
       @group.add_user(@user.id,true)
+      accept_invite(@user.id, @group.id)
       4.times do
         u = FactoryBot.create(:user)
         @group.add_user(u.id,false)
+        accept_invite(u.id, @group.id)
       end
     end
 
@@ -31,6 +31,8 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
     context 'should return info about group when logged' do
       before(:each) do
         @group.add_user(@user.id,false)
+        accept_invite(@user.id, @group.id)
+
 
         get(:show, params:{id: @group.id}, format: :json)
       end
@@ -47,8 +49,8 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
       it { should respond_with 401 }
     end
   end
-  describe 'when a logged user' do
-    context 'creates a right group' do
+  describe 'POST /groups' do
+    context 'when a logged users creates a right group' do
       before(:each) do
         #@user.generate_auth_token
         #@user.save!
@@ -63,8 +65,7 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
       end
 
       it 'The user should be the administrator of the group' do
-        r = Role.where(group_id: @id, user_id: @user.id, admin: true).first
-        expect(r).not_to be_nil
+        expect(@user.is_admin_in?@id).to eql true
       end
       it {should respond_with 201}
     end
@@ -96,6 +97,8 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
       @group = FactoryBot.create(:group)
       #@user = FactoryBot.create(:user)
       @group.add_user(@user.id,true)
+      accept_invite(@user.id, @group.id)
+
     end
     context 'When an admin adds a member' do
       before (:each) do
@@ -114,10 +117,6 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
           expect(Role.where(user_id: @user2.id, group_id: @group.id).first.admin).to eql false
         end
       end
-
-
-
-
 
       it 'the new user must be in group and non admin' do
         role = Role.where(group_id: @group.id, user_id: @user2.id).first
@@ -179,8 +178,10 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
     before(:each) do
       @group = FactoryBot.create(:group)
       @group.add_user(@user.id,true)
+      accept_invite(@user.id, @group.id)
       @u2 = FactoryBot.create(:user)
       @group.add_user(@u2.id,false)
+      accept_invite(@u2.id, @group.id)
     end
     context 'an admin removes an user' do
       before(:each) do
@@ -225,6 +226,7 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
     before do
       @group = FactoryBot.create(:group)
       @group.add_user(@user.id,true)
+      accept_invite(@user.id, @group.id)
     end
 
     context 'when there are participants in group' do
@@ -232,6 +234,7 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
         15.times do
           user = FactoryBot.create(:user)
           @group.add_user(user.id)
+          accept_invite(user.id, @group.id)
         end
         api_auth_token(@user.auth_token)
         get :participants, params: {id: @group.id},format: :json
@@ -258,5 +261,118 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
       it {should respond_with 401}
     end
 
+  end
+
+  describe 'PUT /groups/:id/roles/:user_id' do
+    before do
+      @group = FactoryBot.create(:group)
+      @u2 = FactoryBot.create(:user)
+      @group.add_user(@user.id, true)
+      accept_invite(@user.id, @group.id)
+      @group.add_user(@u2.id)
+      accept_invite(@u2.id, @group.id)
+    end
+    context 'when an admin updates role' do
+      before do
+        api_auth_token(@user.auth_token)
+        param = {admin:true, name:"nuovo ruolo", id: @group.id, user_id: @u2.id}
+        put :update_role, params: param, format: :json
+      end
+      it "update the roles with new params" do
+        r = Role.where(user_id: @u2.id, group_id: @group.id).first
+        expect(r.admin).to eql true
+        expect(r.name).to eql "nuovo ruolo"
+      end
+      it {should respond_with 201}
+    end
+    context 'when admin updates wrong role' do
+      before do
+        api_auth_token(@user.auth_token)
+        param = {admin:"casa", name:nil, id: @group.id, user_id: @u2.id}
+        put :update_role, params: param, format: :json
+      end
+      it "returns an error" do
+        expect(json_response).to have_key(:errors)
+      end
+      it {should respond_with 400}
+    end
+    context 'when not admin updates role' do
+      before do
+        api_auth_token(@u2.auth_token)
+        param = {admin:true, name:"nuovo ruolo", id: @group.id, user_id: @u2.id}
+        put :update_role, params: param, format: :json
+      end
+      it "should return an error" do
+        expect(json_response).to have_key :errors
+        expect(json_response[:errors]).to include "not admin"
+      end
+      it {should respond_with 401}
+    end
+  end
+
+  describe 'GET /groups/:id/accept' do
+    before do
+      @group = FactoryBot.create(:group)
+      @u2 = FactoryBot.create(:user)
+      @group.add_user(@user.id, true)
+      @group.add_user(@u2.id, true)
+      accept_invite(@user.id, @group.id)
+    end
+    context 'when user accept an invite' do
+      before do
+        api_auth_token(@u2.auth_token)
+        get :accept, params: {id: @group.id}, format: :json
+      end
+      it "user must be in group now" do
+        expect(@u2.is_in? @group.id).to eql true
+      end
+      it { should respond_with 201}
+    end
+    context 'when user not in group accept an invite' do
+      before do
+        @u3 = FactoryBot.create(:user)
+        api_auth_token(@u3.auth_token)
+        get :accept, params: {id: @group.id}, format: :json
+      end
+      it "return an error" do
+        expect(json_response).to have_key :errors
+        expect(json_response[:errors]).to include "not in group"
+      end
+      it { should respond_with 401}
+    end
+  end
+
+  describe 'PUT /groups/:id' do
+    before do
+      @group = FactoryBot.create(:group)
+      @group.add_user(@user, true)
+      accept_invite(@user.id, @group.id)
+    end
+    context 'when an admin update a group' do
+      before do
+        params = {id: @group.id, name: "nuovo nome"}
+        api_auth_token(@user.auth_token)
+        patch :update, params: params, format: :json
+      end
+      it "update group params" do
+        expect(@group.name).to eql "nuovo nome"
+      end
+      it {should respond_with 201}
+    end
+    context 'when an non admin update a group' do
+      before do
+        @u2 = FactoryBot.create(:user)
+        @group.add_user(@u2.id)
+        accept_invite(@u2.id, @group.id)
+        params = {id: @group.id,  name: "nuovo nome" }
+        api_auth_token(@u2.auth_token)
+        put :update, params: params, format: :json
+      end
+      it "return error" do
+        expect(json_response).to have_key :errors
+        expect(json_response[:errors]).to include "not admin"
+      end
+      it {should respond_with 401}
+    end
   end
 end

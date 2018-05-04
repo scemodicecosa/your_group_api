@@ -33,11 +33,11 @@ class User < ApplicationRecord
   end
 
   def is_in?(group_id)
-    Role.where(group_id: group_id, user_id: self.id).present?
+    Role.where(group_id: group_id, user_id: self.id, accepted: true).present?
   end
 
   def is_admin_in?(group_id)
-    Role.where(group_id: group_id, user_id: self.id, admin: true).present?
+    Role.where(group_id: group_id, user_id: self.id, admin: true, accepted: true).present?
   end
 
 end

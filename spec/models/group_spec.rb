@@ -11,9 +11,9 @@ RSpec.describe Group, type: :model do
     end
 
     it 'Could have one or more user ' do
-      @group.users << @user1
-      @group.users << @user2
-      @group.users << @user3
+      @group.add_user @user1
+      @group.add_user @user2
+      @group.add_user @user3
 
       expect(@group).to be_valid
     end
@@ -21,10 +21,6 @@ RSpec.describe Group, type: :model do
 
   it 'should have a name' do
     should validate_presence_of(:name)
-  end
-
-  it 'should have at least one administrator' do
-
   end
 
 

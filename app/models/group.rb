@@ -10,13 +10,9 @@ class Group < ApplicationRecord
 
 
   def add_user(user_id, admin = false)
-    r = Role.where(user_id: user_id, group: self).first_or_create!
-    r.update(admin: admin)
-    if admin
-      r.update(name: 'Admin')
-    else
-      r.update(name: 'Participant')
-    end
+    r = Role.where(user_id: user_id, group: self).first_or_initialize
+    name = admin ? 'Admin' : 'Participant'
+    r.update(admin: admin, name: name)
   end
 
   def remove_user(user_id)
@@ -25,6 +21,7 @@ class Group < ApplicationRecord
 
 
 
+# TODO remove that shit
 
   def new_poll(u, question, answers)
     return unless self.users.include? u
@@ -34,12 +31,6 @@ class Group < ApplicationRecord
 
   def new_action(name, description)
     Action.create!(name: name, description: description, group: self)
-  end
-
-  def self.new_group(user, params)
-    g = Group.new(params)
-    g.add_admin(user)
-    g
   end
 
 
