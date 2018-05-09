@@ -12,4 +12,11 @@ module Authenticable
     current_user.present?
   end
 
+  def is_in?(user_id, group_id)
+    Role.where(group_id: group_id, user_id: user_id, accepted: true).present?
+  end
+
+  def is_admin_in?(user_id, group_id)
+    Role.where(group_id: group_id, user_id: user_id, accepted: true, admin: true).present?
+  end
 end

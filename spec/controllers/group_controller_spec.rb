@@ -321,10 +321,20 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
     context 'when user accept an invite' do
       before do
         api_auth_token(@u2.auth_token)
-        get :accept, params: {id: @group.id}, format: :json
+        get :accept, params: {id: @group.id, accepted: true}, format: :json
       end
       it "user must be in group now" do
         expect(@u2.is_in? @group.id).to eql true
+      end
+      it { should respond_with 201}
+    end
+    context 'when user accept with a wrong parameter an invite' do
+      before do
+        api_auth_token(@u2.auth_token)
+        get :accept, params: {id: @group.id, accepted: "ciao"}, format: :json
+      end
+      it "user must be in group now" do
+        expect(@u2.is_in? @group.id).to eql false
       end
       it { should respond_with 201}
     end

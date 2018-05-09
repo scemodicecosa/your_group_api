@@ -89,7 +89,8 @@ class Api::V1::GroupsController < ApplicationController
   def accept
     r = Role.where(user_id: current_user.id, group_id: params[:id]).first
     if r
-      if r.update(accepted: true)
+      accepted = params[:accepted] == "true" ? true : false
+      if r.update(accepted: accepted)
          head 201
       else
          render json: {errors: r.errors}, status: 400
